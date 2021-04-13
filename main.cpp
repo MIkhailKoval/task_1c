@@ -2,7 +2,7 @@
 #include <map>
 #include <set>
 #include <vector>
-#include "mask.h"
+#include <limits.h>
 
 class DependenciesTable;
 class Course;
@@ -20,7 +20,9 @@ class Course {
   int GetLevel() const { return level; }
   
   void AddPoolDependencies(PoolDependencies& depend) { dependencies.push_back(depend); }
-  
+  void AddReversedEdge(Course course) {
+    reversed_edges.push_back(course);
+  }
   int MaxSemesterToTake() const {
     // Not Implemented
   }
@@ -30,7 +32,11 @@ class Course {
   }
   
   int GetUpVertex() const {
-    // Not Implemented
+    int min_height = std::numeric_limits<int>::max();
+    for( const auto& course: reversed_edges) {
+      min_height = std::min(course.GetHight(), min_height);
+    }
+    return min_height;
   }
 
  private:
@@ -41,7 +47,6 @@ class Course {
   int height;
   int priority;
   void AddPoolDependence(PoolDependencies& depends) { dependencies.push_back(depends); }
-
 };
 
 class PoolDependencies {
@@ -49,7 +54,9 @@ class PoolDependencies {
   PoolDependencies() {}
 
   void AddCourse(Course course) { pool.push_back(course); }
-
+  std::vector<Course>& GetCources() {
+    return pool;
+  }; 
  private:
   std::vector<Course> pool;
 };
@@ -78,9 +85,19 @@ bool NextMask(std::vector<bool>& mask) {
   return !flag;
 }
 
-bool IsSuitableSubset(const std::vector<bool>& mask, const std::vector<std::string>& cources) {}
+bool IsSuitableSubset(const std::vector<bool>& mask, const std::vector<std::string>& cources) { 
+  std::vector<bool> met(mask.size(), 0);
+  for( int i = 0; i < mask.size(); i++ ) {
+    if( met[i] == 1 || mask[i] == 0 ) {
+      continue;
+    }
+     
+  }
+}
 
-bool TryToPlaceInTimeTable(const std::vector<bool>& mask, const std::vector<std::string>& cources) {}
+bool TryToPlaceInTimeTable(const std::vector<bool>& mask, const std::vector<std::string>& cources) {
+  // Not Implemented
+}
 
 void CheckPriorityAndSaveTheBest(const std::vector<bool>& mask, const std::vector<bool>& best_mask){
     // Not Implemented
